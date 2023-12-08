@@ -4,6 +4,16 @@ var bcrypt = require('bcryptjs');
 var jwt = require('jsonwebtoken');
 const mongoose = require ('mongoose');
 const Profesor = require('../models/User.model');
+const cloudinary = require('cloudinary').v2;
+
+// Configuración de Cloudinary 
+cloudinary.config({
+  cloud_name: 'ddy10tgci',
+  api_key: '187851378689789',
+  api_secret: 'y4TsRDQJeWiYxY1Sxd5cJx-iz40',
+});
+
+
 
 // Saving the context of this module inside the _the variable
 _this = this
@@ -29,18 +39,6 @@ exports.createClase = async (claseId, claseData) => {
       throw error;
     }
   };    
-
-  //get clases de un profesor
-  exports.getClasesProfesor = async (id_profesor) => {
-    try {
-      // Buscar clases del profesor por su ID
-      /*const clases = await Clase.find({ id_profesor }).exec();
-      return clases;*/
-    } 
-    catch (error) {
-      throw error;
-    }
-  };
   
   //get clases 
   exports.getClases = async (filtro, profesorId) => {
@@ -62,7 +60,7 @@ exports.createClase = async (claseId, claseData) => {
         filtroQuery.id_profesor = profesorId
       }          
       // Buscar clases basadas en el filtro
-      const clases = await Clase.find(filtroQuery).select('_id id_profesor categoria tipo frecuencia publicada').exec();
+      const clases = await Clase.find(filtroQuery).select('_id id_profesor categoria tipo frecuencia duracion costo publicada').exec();
       console.log("clases: "+clases)
       return clases;
     } catch (error) {
@@ -74,7 +72,7 @@ exports.createClase = async (claseId, claseData) => {
   // mostrar datos de una clase (comentarios true si logeado == false)
 exports.getClaseById = async (claseId, profesorId) => {
   try {
-      const clase = await Clase.findById(claseId).select('categoria tipo frecuencia comentarios id_profesor').exec();
+      const clase = await Clase.findById(claseId).select('categoria tipo frecuencia duracion costo comentarios id_profesor').exec();
       
       if (!clase) {
         throw new Error('Clase no encontrada');
@@ -87,7 +85,7 @@ exports.getClaseById = async (claseId, profesorId) => {
       let comentariosFiltrados = [];
       
       if (profesorId) {
-          // Si el usuario (profesor) está autenticado, mostrar todos los comentarios
+          // Si está autenticado, mostrar todos los comentarios
           comentariosFiltrados = clase.comentarios;
       } else {
           // Mostrar solo los comentarios con estado true

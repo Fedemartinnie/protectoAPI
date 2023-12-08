@@ -1,5 +1,10 @@
 const jwt = require('jsonwebtoken');
 const ClaseFedeService = require('../services/claseFedeService');
+const multer = require('multer');
+
+// Configuración de multer para gestionar la carga de archivos
+const storage = multer.memoryStorage(); // Almacena los archivos en memoria
+const upload = multer({ storage: storage });
 
 _this = this;
 
@@ -35,14 +40,21 @@ exports.createClase = async (req, res) => {
       id_profesor: profesorId,      
     };
     console.log("claseId: ",claseId, "\n",claseData);
+
+    //const contentType = req.headers['content-type'];
+    
     const nuevaClase = await ClaseFedeService.createClase(claseId, claseData);
+
+
+    //const nuevaClase = await ClaseFedeService.createClase(claseId, claseData);
     if (claseId) {
       res.status(200).json(nuevaClase); // Actualización exitosa
     } 
     else {
       res.status(201).json(nuevaClase); // Creación exitosa
     }
-  } catch (error) {
+  } 
+  catch (error) {
     res.status(500).json({ error: error.message });
   }
 };

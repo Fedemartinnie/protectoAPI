@@ -1,5 +1,6 @@
 var mongoose = require('mongoose')
 var mongoosePaginate = require('mongoose-paginate')
+const cloudinary = require('cloudinary').v2;
 
 
 const ComentarioSchema = new mongoose.Schema({
@@ -35,9 +36,38 @@ const ClaseSchema = new mongoose.Schema({
     
   });
 
+// Configuración de Cloudinary 
+cloudinary.config({
+  cloud_name: 'ddy10tgci',
+  api_key: '187851378689789',
+  api_secret: 'y4TsRDQJeWiYxY1Sxd5cJx-iz40',
+});
+
+// Middleware para manejar la carga de imágenes antes de guardar en MongoDB
+ClaseSchema.pre('save', async function(next) {
+  const clase = this;
+
+  if (clase.imagen && clase.isModified('imagen')) {
+    try {
+      // Carga la imagen a Cloudinary y obtén la URL
+      const cloudinaryResponse = await cloudinary.uploader.upload(clase.imagen, {
+        folder: 'tu_carpeta_en_cloudinary', // Puedes personalizar la carpeta en Cloudinary
+      });
+
+      // Actualiza la URL de la imagen en el esquema
+      clase.imagen = cloudinaryResponse.secure_url;
+      next();
+    } catch (error) {
+      next(error);
+    }
+  } else {
+    next();
+  }
+});
 
 
 ClaseSchema.plugin(mongoosePaginate)
+
 const Clase = mongoose.model('Clase', ClaseSchema)
 const Alumno = mongoose.model('Alumno',AlumnoSchema)
 const Comentario = mongoose.model('Comentario',ComentarioSchema)
