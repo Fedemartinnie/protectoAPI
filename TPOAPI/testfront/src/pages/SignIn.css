@@ -1,0 +1,56 @@
+.signInContainer {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .signInContainer h2 {
+    text-align: center;
+    color: #5e5e5e;
+  }
+  
+  .signInContainer label {
+    display: block;
+    margin-bottom: 5px;
+    color: #333;
+  }
+  
+  .signInContainer input[type="text"],
+  .signInContainer input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box; 
+  }
+  
+  .signInContainer button {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .signInContainer button:hover {
+    background-color: #0056b3;
+  }
+  
+  .signInContainer a {
+    display: block;
+    text-align: center;
+    margin-top: 10px;
+    color: #007bff;
+    text-decoration: none;
+  }
+  
+  .signInContainer a:hover {
+    text-decoration: underline;
+  }
+  
